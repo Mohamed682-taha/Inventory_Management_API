@@ -4,11 +4,10 @@ using System.Text;
 
 namespace Domain.Models
 {
-    public class Category
+    public class Category : BaseEntity<int>
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
         public ICollection<Product> Products { get; set; } = null!;
     }
 }
