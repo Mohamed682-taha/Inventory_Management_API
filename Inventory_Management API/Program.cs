@@ -1,6 +1,8 @@
 
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data.DbContexts;
+using Persistence.Repositories;
 
 namespace Inventory_Management_API
 {
@@ -15,6 +17,7 @@ namespace Inventory_Management_API
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
