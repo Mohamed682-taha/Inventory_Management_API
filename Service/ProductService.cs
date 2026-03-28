@@ -8,18 +8,23 @@ namespace Service
 {
     public class ProductService(IUnitOfWork _unitOfWork,IMapper _mapper) : IProductService
     {
-        public async Task AddProductAsync(ProductDto dto)
+        public async Task<int> AddProductAsync(CreateProductDto dto)
         {
-            var mappedProduct = _mapper.Map<ProductDto,Product>(dto);
+            var mappedProduct = _mapper.Map<CreateProductDto,Product>(dto);
             await _unitOfWork.GetRepository<Product,int>().AddAsync(mappedProduct);
+            var result = await _unitOfWork.SaveChangesAsync();
+            if ( result > 0 )
+                return 1;
+            return 0;
         }
 
-        public async Task DeleteProduct(int Id)
+        public async Task<bool> DeleteProduct(int Id)
         {
             var product = await _unitOfWork.GetRepository<Product,int>().GetById(Id);
             if ( product is null )
-                return;
+                return false;
             _unitOfWork.GetRepository<Product,int>().Remove(product);
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
         public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync()
@@ -38,10 +43,15 @@ namespace Service
             return mappedProduct;
         }
 
-        public void UpdateProduct(ProductDto dto)
+        public async Task<int> UpdateProduct(int Id,UpdateProductDto dto)
         {
-            var mappedProduct = _mapper.Map<ProductDto,Product>(dto);
+            var mappedProduct = _mapper.Map<UpdateProductDto,Product>(dto);
+            mappedProduct.Id = Id;
             _unitOfWork.GetRepository<Product,int>().Update(mappedProduct);
+            var Updated = await _unitOfWork.SaveChangesAsync();
+            if ( Updated > 0 )
+                return 1;
+            return 0;
         }
     }
 }

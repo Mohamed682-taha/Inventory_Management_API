@@ -11,6 +11,8 @@ namespace Service.MappingProfiles
             CreateMap<ProductDto,Product>()
                 .ForMember(dest => dest.Category.Name,opt => opt.MapFrom(src => src.CategoryName))
                 .ReverseMap();
+            CreateMap<CreateProductDto,Product>();
+            CreateMap<UpdateProductDto,Product>();
         }
     }
 }
