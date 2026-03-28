@@ -1,0 +1,22 @@
+[
+	{
+		"Name": "Electronics",
+		"Description": "Electronic devices and accessories"
+	},
+	{
+		"Name": "Furniture",
+		"Description": "Office and home furniture"
+	},
+	{
+		"Name": "Office Supplies",
+		"Description": "Stationery and office essentials"
+	},
+	{
+		"Name": "Networking",
+		"Description": "Networking devices and cables"
+	},
+	{
+		"Name": "Peripherals",
+		"Description": "Computer peripherals and input devices"
+	}
+]

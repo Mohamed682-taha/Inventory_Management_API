@@ -8,9 +8,8 @@ namespace Service.MappingProfiles
     {
         public ProductProfile()
         {
-            CreateMap<ProductDto,Product>()
-                .ForMember(dest => dest.Category.Name,opt => opt.MapFrom(src => src.CategoryName))
-                .ReverseMap();
+            CreateMap<ProductDto,Product>().ReverseMap();
+                //.ForMember(dest => dest.Category.Name,opt => opt.MapFrom(src => src.CategoryName))
             CreateMap<CreateProductDto,Product>();
             CreateMap<UpdateProductDto,Product>();
         }

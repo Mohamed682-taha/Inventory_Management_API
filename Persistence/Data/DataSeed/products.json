@@ -1,0 +1,122 @@
+[
+	{
+		"Name": "Laptop",
+		"Description": "High performance business laptop",
+		"Price": 999.99,
+		"QuantityInStock": 50,
+		"Supplier": "Dell",
+		"CategoryId": 1
+	},
+	{
+		"Name": "Smartphone",
+		"Description": "Latest Android smartphone",
+		"Price": 699.99,
+		"QuantityInStock": 75,
+		"Supplier": "Samsung",
+		"CategoryId": 1
+	},
+	{
+		"Name": "Monitor",
+		"Description": "27 inch 4K UHD display monitor",
+		"Price": 399.99,
+		"QuantityInStock": 30,
+		"Supplier": "LG",
+		"CategoryId": 1
+	},
+	{
+		"Name": "Office Desk",
+		"Description": "Spacious wooden office desk",
+		"Price": 249.99,
+		"QuantityInStock": 20,
+		"Supplier": "IKEA",
+		"CategoryId": 2
+	},
+	{
+		"Name": "Office Chair",
+		"Description": "Ergonomic adjustable office chair",
+		"Price": 199.99,
+		"QuantityInStock": 35,
+		"Supplier": "IKEA",
+		"CategoryId": 2
+	},
+	{
+		"Name": "Bookshelf",
+		"Description": "5 tier wooden bookshelf",
+		"Price": 149.99,
+		"QuantityInStock": 15,
+		"Supplier": "IKEA",
+		"CategoryId": 2
+	},
+	{
+		"Name": "Printer Paper",
+		"Description": "A4 white printer paper 500 sheets",
+		"Price": 9.99,
+		"QuantityInStock": 200,
+		"Supplier": "Staples",
+		"CategoryId": 3
+	},
+	{
+		"Name": "Ballpoint Pens",
+		"Description": "Pack of 12 black ballpoint pens",
+		"Price": 4.99,
+		"QuantityInStock": 150,
+		"Supplier": "Staples",
+		"CategoryId": 3
+	},
+	{
+		"Name": "Stapler",
+		"Description": "Heavy duty office stapler",
+		"Price": 14.99,
+		"QuantityInStock": 60,
+		"Supplier": "Staples",
+		"CategoryId": 3
+	},
+	{
+		"Name": "Network Switch",
+		"Description": "24 port gigabit network switch",
+		"Price": 179.99,
+		"QuantityInStock": 25,
+		"Supplier": "Cisco",
+		"CategoryId": 4
+	},
+	{
+		"Name": "Wireless Router",
+		"Description": "Dual band WiFi 6 wireless router",
+		"Price": 129.99,
+		"QuantityInStock": 40,
+		"Supplier": "TP-Link",
+		"CategoryId": 4
+	},
+	{
+		"Name": "Ethernet Cable",
+		"Description": "Cat6 ethernet cable 10 meters",
+		"Price": 12.99,
+		"QuantityInStock": 100,
+		"Supplier": "Anker",
+		"CategoryId": 4
+	},
+	{
+		"Name": "Mechanical Keyboard",
+		"Description": "Wireless mechanical gaming keyboard",
+		"Price": 89.99,
+		"QuantityInStock": 45,
+		"Supplier": "Logitech",
+		"CategoryId": 5
+	},
+	{
+		"Name": "Wireless Mouse",
+		"Description": "Ergonomic wireless optical mouse",
+		"Price": 49.99,
+		"QuantityInStock": 55,
+		"Supplier": "Logitech",
+		"CategoryId": 5
+	},
+	{
+		"Name": "Webcam",
+		"Description": "1080p HD USB webcam with microphone",
+		"Price": 69.99,
+		"QuantityInStock": 38,
+		"Supplier": "Logitech",
+		"CategoryId": 5
+	}
+]
