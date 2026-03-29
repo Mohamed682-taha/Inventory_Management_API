@@ -13,7 +13,7 @@ namespace Inventory_Management_API.MiddleWares
             _logger = logger;
         }
 
-        public async Task InvokeAync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {

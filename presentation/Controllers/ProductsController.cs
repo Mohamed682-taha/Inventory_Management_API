@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Presentation.Errors;
 using ServiceAbstraction;
+using Shared;
 using Shared.ProductsDto;
 
 namespace Presentation.Controllers
@@ -12,7 +13,7 @@ namespace Presentation.Controllers
         // GET : BaseUrl/api/Products?SearchName=Laptop
         // Get all products (Filtration by => Name)
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts([FromQuery] ProductQueryParams queryParams)
+        public async Task<ActionResult<PaginatedResult<ProductDto>>> GetAllProducts([FromQuery] ProductQueryParams queryParams)
         {
             var products = await _serviceManager.ProductService.GetAllProductsAsync(queryParams);
             return Ok(products);
