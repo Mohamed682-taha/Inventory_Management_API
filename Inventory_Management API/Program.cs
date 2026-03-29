@@ -1,9 +1,12 @@
 
 using Domain.Interfaces;
+using Inventory_Management_API.MiddleWares;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using Persistence.Data.DbContexts;
 using Persistence.Repositories;
+using Presentation.Errors;
 using Service;
 using Service.MappingProfiles;
 using ServiceAbstraction;
@@ -26,6 +29,21 @@ namespace Inventory_Management_API
             builder.Services.AddAutoMapper(p => p.AddProfile(new ProductProfile()));
             builder.Services.AddOpenApi();
 
+            builder.Services.Configure<ApiBehaviorOptions>((options) =>
+            {
+                options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                    var errors = actionContext.ModelState.Where(m => m.Value!.Errors.Count() > 0)
+                                            .SelectMany(m => m.Value!.Errors)
+                                            .Select(e => e.ErrorMessage);
+                    var response = new ApiValidationErrorResponse()
+                    {
+                        Errors = errors
+                    };
+                    return new BadRequestObjectResult(response);
+                };
+            });
+
             var app = builder.Build();
 
             using var scope = app.Services.CreateScope();
@@ -42,10 +60,13 @@ namespace Inventory_Management_API
                 logger.LogError(ex,"An error occured while migrating/seeding");
             }
 
+            app.UseMiddleware<CustomExceptionMiddleware>();
             if ( app.Environment.IsDevelopment() )
             {
                 app.MapOpenApi();
             }
+
+
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 

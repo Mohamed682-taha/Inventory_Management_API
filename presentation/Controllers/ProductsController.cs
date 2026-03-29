@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Presentation.Errors;
 using ServiceAbstraction;
 using Shared.ProductsDto;
 
@@ -11,7 +12,7 @@ namespace Presentation.Controllers
         // GET : BaseUrl/api/Products?SearchName=Laptop
         // Get all products (Filtration by => Name)
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts([FromQuery]ProductQueryParams queryParams)
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts([FromQuery] ProductQueryParams queryParams)
         {
             var products = await _serviceManager.ProductService.GetAllProductsAsync(queryParams);
             return Ok(products);
@@ -23,6 +24,8 @@ namespace Presentation.Controllers
         public async Task<ActionResult<ProductDto>> GetProduct(int Id)
         {
             var product = await _serviceManager.ProductService.GetProductByIdAsync(Id);
+            if ( product is null )
+                return NotFound(new ApiResponse(404));
             return Ok(product);
         }
 
@@ -50,6 +53,8 @@ namespace Presentation.Controllers
         public async Task<IActionResult> DeleteProduct(int Id)
         {
             var deleted = await _serviceManager.ProductService.DeleteProduct(Id);
+            if ( !deleted )
+                return NotFound(new ApiResponse(404));
             return Ok(deleted);
         }
 
