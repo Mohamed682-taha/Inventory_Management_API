@@ -8,12 +8,12 @@ namespace Presentation.Controllers
     [Route("api/[Controller]")]
     public class ProductsController(IServiceManager _serviceManager) : ControllerBase
     {
-        // GET : BaseUrl/api/Products
-        // Get all products
+        // GET : BaseUrl/api/Products?SearchName=Laptop
+        // Get all products (Filtration by => Name)
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts([FromQuery]ProductQueryParams queryParams)
         {
-            var products = await _serviceManager.ProductService.GetAllProductsAsync();
+            var products = await _serviceManager.ProductService.GetAllProductsAsync(queryParams);
             return Ok(products);
         }
 

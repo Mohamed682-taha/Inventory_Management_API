@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
 using Domain.Models;
+using Service.Specifications;
 using ServiceAbstraction;
 using Shared.ProductsDto;
 
@@ -27,9 +28,10 @@ namespace Service
             return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
-        public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync()
+        public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync(ProductQueryParams queryParams)
         {
-            var products = await _unitOfWork.GetRepository<Product,int>().GetAllAsync();
+            var specs = new ProductSpecifications(queryParams);
+            var products = await _unitOfWork.GetRepository<Product,int>().GetAllAsync(specs);
             var mappedProducts = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
             return mappedProducts;
         }
