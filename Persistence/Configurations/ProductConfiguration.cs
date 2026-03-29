@@ -15,12 +15,12 @@ namespace Persistence.Configurations
             builder.Property(p => p.CreatedAt).HasDefaultValueSql("GETDATE()");
             builder.Property(p => p.UpdatedAt).HasComputedColumnSql("GETDATE()");
             //Relationships
-            builder.HasMany(p => p.Transactions)
+            builder.HasMany<Transaction>()
                    .WithOne(t => t.Product)
                    .HasForeignKey(t => t.ProductId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(p => p.LowStockAlerts)
+            builder.HasMany<LowStockAlert>()
                    .WithOne(l => l.Product)
                    .HasForeignKey(l => l.ProductId)
                    .OnDelete(DeleteBehavior.Cascade);

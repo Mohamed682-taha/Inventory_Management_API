@@ -11,8 +11,6 @@
         public DateTime UpdatedAt { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
-        public ICollection<Transaction> Transactions { get; set; } = [];
-        public ICollection<LowStockAlert> LowStockAlerts { get; set; } = [];
 
     }
 }

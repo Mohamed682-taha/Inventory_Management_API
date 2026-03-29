@@ -4,10 +4,10 @@ namespace ServiceAbstraction
 {
     public interface IProductService
     {
-        Task<IReadOnlyList<ProductDto>> GetAllProductsAsync();
+        Task<IReadOnlyList<ProductDto>> GetAllProductsAsync(ProductQueryParams queryParams);
         Task<ProductDto?> GetProductByIdAsync(int Id);
-        void UpdateProduct(ProductDto dto);
-        Task DeleteProduct(int Id);
-        Task AddProductAsync(ProductDto dto);
+        Task<int> UpdateProduct(int Id,UpdateProductDto dto);
+        Task<bool> DeleteProduct(int Id);
+        Task<int> AddProductAsync(CreateProductDto dto);
     }
 }

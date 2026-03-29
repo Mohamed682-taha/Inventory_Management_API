@@ -15,7 +15,11 @@ namespace Persistence.Repositories
         }
 
         public async Task AddAsync(TEntity entity) => await _dbContext.Set<TEntity>().AddAsync(entity);
-        public async Task<IReadOnlyList<TEntity>> GetAllAsync() => await _dbContext.Set<TEntity>().ToListAsync();
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync(ISpecification<TEntity,TKey> specs)
+        {
+            var query = _dbContext.Set<TEntity>();
+            return await SpecificationQueryBuilder.CreateQuery(query,specs).ToListAsync();
+        }
         public async Task<TEntity?> GetById(int Id) => await _dbContext.Set<TEntity>().FindAsync(Id);
         public void Remove(TEntity entity) => _dbContext.Set<TEntity>().Remove(entity);
         public void Update(TEntity entity) => _dbContext.Set<TEntity>().Update(entity);
