@@ -26,7 +26,7 @@ namespace Inventory_Management_API.MiddleWares
                 _logger.LogError(ex.Message);
                 context.Response.StatusCode = ex switch
                 {
-                    BadRequestException => 404,
+                    BadRequestException => StatusCodes.Status400BadRequest,
                     _ => 500
                 };
                 var response = new ApiServerErrorResponse(context.Response.StatusCode,ex.Message,ex.StackTrace);
@@ -36,7 +36,8 @@ namespace Inventory_Management_API.MiddleWares
 
         private static async Task NotFoundEndpointHandler(HttpContext context)
         {
-            if ( context.Response.StatusCode == StatusCodes.Status404NotFound )
+            var endpoint = context.GetEndpoint();
+            if ( endpoint is null && context.Response.StatusCode == StatusCodes.Status404NotFound )
             {
                 var response = new ApiResponse(StatusCodes.Status404NotFound,$"Endpoint with Url:{context.Request.Path} is not found");
                 await context.Response.WriteAsJsonAsync(response);

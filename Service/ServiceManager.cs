@@ -10,6 +10,7 @@ namespace Service
         IUnitOfWork _unitOfWork,
         IMapper _mapper,
         UserManager<AppUser> _userManager,
+        RoleManager<IdentityRole> _roleManager,
         ITokenService _tokenService
         )
         : IServiceManager
@@ -20,5 +21,8 @@ namespace Service
 
         private readonly Lazy<IUserService> _userService = new Lazy<IUserService>(() => new UserService(_userManager,_tokenService));
         public IUserService UserService => _userService.Value;
+
+        private readonly Lazy<IAdminService> _adminService = new Lazy<IAdminService>(() => new AdminService(_userManager,_roleManager));
+        public IAdminService AdminService => _adminService.Value;
     }
 }

@@ -36,7 +36,7 @@ namespace Service
             var result = await _userManager.CreateAsync(User,dto.Password);
             if ( !result.Succeeded )
             {
-                var errors = result.Errors.Select(e => e.Description).ToList();
+                var errors = result.Errors.Select(e => e.Description);
                 throw new BadRequestException(errors);
             }
 

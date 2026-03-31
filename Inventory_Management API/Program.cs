@@ -76,10 +76,11 @@ namespace Inventory_Management_API
             var _dbContext = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
             var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger<Program>();
+            var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             try
             {
                 await _dbContext.Database.MigrateAsync();
-                await DataSeed.SeedDataAsync(_dbContext);
+                await DataSeed.SeedDataAsync(_dbContext,_roleManager);
             }
             catch ( Exception ex )
             {

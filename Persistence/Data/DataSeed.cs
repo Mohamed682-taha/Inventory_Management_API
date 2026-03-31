@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data.DbContexts;
 using System.Text.Json;
@@ -7,7 +8,7 @@ namespace Persistence.Data
 {
     public static class DataSeed
     {
-        public static async Task SeedDataAsync(InventoryDbContext _dbContext)
+        public static async Task SeedDataAsync(InventoryDbContext _dbContext,RoleManager<IdentityRole> _roleManager)
         {
             if ( !await _dbContext.Categories.AnyAsync() )
             {
@@ -23,7 +24,22 @@ namespace Persistence.Data
                 if ( Products?.Count > 0 )
                     await _dbContext.Products.AddRangeAsync(Products);
             }
+            if ( !await _dbContext.Roles.AnyAsync() )
+            {
+                string[] roles = ["Admin","Staff","Manager"];
+                foreach ( var role in roles )
+                {
+                    var result = await _roleManager.CreateAsync(new IdentityRole(role));
+                    if ( !result.Succeeded )
+                    {
+                        var errors = string.Join(",",result.Errors.Select(e => e.Description));
+                        throw new Exception(errors);
+                    }
+                }
+
+            }
             await _dbContext.SaveChangesAsync();
         }
     }
 }
+

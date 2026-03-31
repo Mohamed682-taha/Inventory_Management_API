@@ -2,8 +2,8 @@
 {
     public class BadRequestException : Exception
     {
-        public List<string> Errors { get; set; }
-        public BadRequestException(List<string> errors) : base("Bad Request")
+        public IEnumerable<string> Errors { get; set; }
+        public BadRequestException(IEnumerable<string> errors) : base("Bad Request")
         {
             Errors = errors;
         }
