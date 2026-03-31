@@ -1,4 +1,5 @@
-﻿using Presentation.Errors;
+﻿using Domain.Exceptions;
+using Presentation.Errors;
 
 namespace Inventory_Management_API.MiddleWares
 {
@@ -23,8 +24,12 @@ namespace Inventory_Management_API.MiddleWares
             catch ( Exception ex )
             {
                 _logger.LogError(ex.Message);
-                context.Response.StatusCode = 500;
-                var response = new ApiServerErrorResponse(500,ex.Message,ex.StackTrace);
+                context.Response.StatusCode = ex switch
+                {
+                    BadRequestException => 404,
+                    _ => 500
+                };
+                var response = new ApiServerErrorResponse(context.Response.StatusCode,ex.Message,ex.StackTrace);
                 await context.Response.WriteAsJsonAsync(response);
             }
         }
