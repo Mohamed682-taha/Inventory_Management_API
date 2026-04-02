@@ -77,6 +77,7 @@ namespace Inventory_Management_API
             var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger<Program>();
             var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             try
             {
                 await _dbContext.Database.MigrateAsync();

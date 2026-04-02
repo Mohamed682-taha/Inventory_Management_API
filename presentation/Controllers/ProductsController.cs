@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Presentation.Errors;
 using ServiceAbstraction;
 using Shared;
@@ -31,6 +32,7 @@ namespace Presentation.Controllers
         // POST : BaseUrl/api/Products
         // Add a product
         [HttpPost]
+        [Authorize(Roles ="Admin,Manager")]
         public async Task<IActionResult> AddProduct(CreateProductDto dto)
         {
             var Added = await _serviceManager.ProductService.AddProductAsync(dto);
@@ -40,6 +42,7 @@ namespace Presentation.Controllers
         // PUT : BaseUrl/api/Products/Id
         // Update a product
         [HttpPut("{Id:int}")]
+        [Authorize(Roles ="Admin,Manager")]
         public async Task<IActionResult> UpdateProduct(int Id,UpdateProductDto dto)
         {
             var Updated = await _serviceManager.ProductService.UpdateProduct(Id,dto);
@@ -49,6 +52,7 @@ namespace Presentation.Controllers
         // DELETE : BaseUrl/api/Products/Id
         // Delete a product
         [HttpDelete("{Id:int}")]
+        [Authorize("Admin")]
         public async Task<IActionResult> DeleteProduct(int Id)
         {
             var deleted = await _serviceManager.ProductService.DeleteProduct(Id);

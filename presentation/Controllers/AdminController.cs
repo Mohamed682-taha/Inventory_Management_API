@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Presentation.Errors;
 using ServiceAbstraction;
 using Shared;
 
 namespace Presentation.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class AdminController(IServiceManager _serviceManager) : ApiBaseController
     {
         // POST : BaseUrl/api/Admin/AssignRole?email=...&role=....

@@ -40,6 +40,19 @@ namespace Persistence.Data
             }
             await _dbContext.SaveChangesAsync();
         }
+
+        public static async Task SeedUserWithAdminRole(UserManager<AppUser> _userManager,InventoryDbContext _dbContext)
+        {
+            var user = new AppUser()
+            {
+                Email = "mohamedtaha20@gmail.com",
+                UserName = "mohamedtaha",
+                PhoneNumber = "0123456789"
+            };
+            await _userManager.CreateAsync(user,"Pa$$w0rd");
+            await _userManager.AddToRoleAsync(user,"Admin");
+
+        }
     }
 }
 
