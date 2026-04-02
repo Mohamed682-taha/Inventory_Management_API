@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using Service.Specifications;
 using ServiceAbstraction;
+using Shared;
 using Shared.ProductsDto;
 
 namespace Service
@@ -21,24 +22,28 @@ namespace Service
 
         public async Task<bool> DeleteProduct(int Id)
         {
-            var product = await _unitOfWork.GetRepository<Product,int>().GetById(Id);
+            var product = await _unitOfWork.GetRepository<Product,int>().GetByIdAsync(Id);
             if ( product is null )
                 return false;
             _unitOfWork.GetRepository<Product,int>().Remove(product);
             return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
-        public async Task<IReadOnlyList<ProductDto>> GetAllProductsAsync(ProductQueryParams queryParams)
+        public async Task<PaginatedResult<ProductDto>> GetAllProductsAsync(ProductQueryParams queryParams)
         {
-            var specs = new ProductSpecifications(queryParams);
-            var products = await _unitOfWork.GetRepository<Product,int>().GetAllAsync(specs);
-            var mappedProducts = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
-            return mappedProducts;
+            var Repo = _unitOfWork.GetRepository<Product,int>();
+            var Specs = new ProductSpecifications(queryParams);
+            var Products = await Repo.GetAllAsync(Specs);
+            var CountSpecs = new ProductCountSpecification(queryParams);
+            var Count = await Repo.CountAysnc(CountSpecs);
+            var MappedProducts = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(Products);
+            return new PaginatedResult<ProductDto>(queryParams.PageSize,queryParams.PageIndex,Count,MappedProducts);
         }
 
         public async Task<ProductDto?> GetProductByIdAsync(int Id)
         {
-            var product = await _unitOfWork.GetRepository<Product,int>().GetById(Id);
+            var specs = new ProductSpecifications(Id);
+            var product = await _unitOfWork.GetRepository<Product,int>().GetByIdAsync(specs);
             if ( product is null )
                 return null;
             var mappedProduct = _mapper.Map<Product,ProductDto>(product);

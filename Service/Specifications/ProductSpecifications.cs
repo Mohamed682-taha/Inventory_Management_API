@@ -36,5 +36,10 @@ namespace Service.Specifications
             }
             AddPagination(queryParams.PageSize,queryParams.PageIndex);
         }
+
+        public ProductSpecifications(int Id) : base(p => p.Id == Id)
+        {
+            AddIncludes(p => p.Category);
+        }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Shared.ProductsDto;
+﻿using Shared;
+using Shared.ProductsDto;
 
 namespace ServiceAbstraction
 {
     public interface IProductService
     {
-        Task<IReadOnlyList<ProductDto>> GetAllProductsAsync(ProductQueryParams queryParams);
+        Task<PaginatedResult<ProductDto>> GetAllProductsAsync(ProductQueryParams queryParams);
         Task<ProductDto?> GetProductByIdAsync(int Id);
         Task<int> UpdateProduct(int Id,UpdateProductDto dto);
         Task<bool> DeleteProduct(int Id);
