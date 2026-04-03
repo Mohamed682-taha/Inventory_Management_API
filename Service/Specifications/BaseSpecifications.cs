@@ -10,6 +10,10 @@ namespace Service.Specifications
         {
             Criteria = CriteriaExpression;
         }
+        protected BaseSpecifications()
+        {
+            
+        }
 
         public Expression<Func<TEntity,bool>> Criteria { get; private set; }
         public List<Expression<Func<TEntity,object>>> Includes { get; } = [];

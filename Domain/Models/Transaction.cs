@@ -1,8 +1,11 @@
-﻿namespace Domain.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Models
 {
     public class Transaction : BaseEntity<int>
     {
         public int Quantity { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public TransactionType Type { get; set; }
         public DateTime Date { get; set; }
         public decimal TotalAmount { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data.DbContexts;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Persistence.Data
 {
@@ -37,6 +38,17 @@ namespace Persistence.Data
                     }
                 }
 
+            }
+            if ( !await _dbContext.Transactions.AnyAsync() )
+            {
+                using var transactionsData = File.OpenRead(@"..\Persistence\Data\DataSeed\transactions.json");
+                var options = new JsonSerializerOptions
+                {
+                    Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }, // For Type Property
+                };
+                var transactions = await JsonSerializer.DeserializeAsync<List<Transaction>>(transactionsData);
+                if ( transactions?.Count > 0 )
+                    await _dbContext.Transactions.AddRangeAsync(transactions);
             }
             await _dbContext.SaveChangesAsync();
         }
