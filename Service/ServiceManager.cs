@@ -24,5 +24,8 @@ namespace Service
 
         private readonly Lazy<IAdminService> _adminService = new Lazy<IAdminService>(() => new AdminService(_userManager,_roleManager));
         public IAdminService AdminService => _adminService.Value;
+
+        private readonly Lazy<ICategoryService> _categoryService = new Lazy<ICategoryService>(() => new CategoryService(_unitOfWork,_mapper));
+        public ICategoryService CategoryService => _categoryService.Value;
     }
 }

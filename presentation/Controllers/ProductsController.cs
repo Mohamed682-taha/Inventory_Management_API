@@ -45,7 +45,7 @@ namespace Presentation.Controllers
         [Authorize(Roles ="Admin,Manager")]
         public async Task<IActionResult> UpdateProduct(int Id,UpdateProductDto dto)
         {
-            var Updated = await _serviceManager.ProductService.UpdateProduct(Id,dto);
+            var Updated = await _serviceManager.ProductService.UpdateProductAsync(Id,dto);
             return Ok(Updated);
         }
 
@@ -55,7 +55,7 @@ namespace Presentation.Controllers
         [Authorize("Admin")]
         public async Task<IActionResult> DeleteProduct(int Id)
         {
-            var deleted = await _serviceManager.ProductService.DeleteProduct(Id);
+            var deleted = await _serviceManager.ProductService.DeleteProductAsync(Id);
             if ( !deleted )
                 return NotFound(new ApiResponse(404));
             return Ok(deleted);

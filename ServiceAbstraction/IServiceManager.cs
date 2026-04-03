@@ -5,5 +5,6 @@
         public IProductService ProductService { get; }
         public IUserService UserService { get; }
         public IAdminService AdminService { get; }
+        public ICategoryService CategoryService { get; }
     }
 }

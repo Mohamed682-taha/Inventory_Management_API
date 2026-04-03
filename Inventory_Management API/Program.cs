@@ -31,7 +31,7 @@ namespace Inventory_Management_API
             });
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddScoped<IServiceManager,ServiceManager>();
-            builder.Services.AddAutoMapper(p => p.AddProfile(new ProductProfile()));
+            builder.Services.AddAutoMapper(p => p.AddProfiles([new ProductProfile(),new CategoriesProfile()]));
             builder.Services.AddOpenApi();
 
             builder.Services.Configure<ApiBehaviorOptions>((options) =>
