@@ -28,7 +28,7 @@ namespace Service
         private readonly Lazy<ICategoryService> _categoryService = new Lazy<ICategoryService>(() => new CategoryService(_unitOfWork,_mapper));
         public ICategoryService CategoryService => _categoryService.Value;
 
-        private readonly Lazy<ITransactionService> _transactionService = new Lazy<ITransactionService>(() => new TransactionsService(_unitOfWork,_mapper));
+        private readonly Lazy<ITransactionService> _transactionService = new Lazy<ITransactionService>(() => new TransactionsService(_unitOfWork,_mapper,_userManager));
         public ITransactionService TransactionService => _transactionService.Value;
     }
 }

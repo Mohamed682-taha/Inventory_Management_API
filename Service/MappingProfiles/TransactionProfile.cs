@@ -12,6 +12,7 @@ namespace Service.MappingProfiles
                     .ForMember(dest => dest.ProductName,opt => opt.MapFrom(src => src.Product.Name))
                     .ForMember(dest => dest.AppUserName,opt => opt.MapFrom(src => src.AppUser.UserName));
             CreateMap<Payment,PaymentDto>();
+            CreateMap<CreateTransactionDto,Transaction>();
         }
     }
 }
