@@ -32,7 +32,7 @@ namespace Presentation.Controllers
         // POST : BaseUrl/api/Products
         // Add a product
         [HttpPost]
-        [Authorize(Roles ="Admin,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> AddProduct(CreateProductDto dto)
         {
             var Added = await _serviceManager.ProductService.AddProductAsync(dto);
@@ -42,7 +42,7 @@ namespace Presentation.Controllers
         // PUT : BaseUrl/api/Products/Id
         // Update a product
         [HttpPut("{Id:int}")]
-        [Authorize(Roles ="Admin,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> UpdateProduct(int Id,UpdateProductDto dto)
         {
             var Updated = await _serviceManager.ProductService.UpdateProductAsync(Id,dto);
@@ -52,7 +52,7 @@ namespace Presentation.Controllers
         // DELETE : BaseUrl/api/Products/Id
         // Delete a product
         [HttpDelete("{Id:int}")]
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int Id)
         {
             var deleted = await _serviceManager.ProductService.DeleteProductAsync(Id);

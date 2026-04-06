@@ -13,7 +13,7 @@ namespace Presentation.Controllers
         [HttpPost("AssignRole")]
         public async Task<IActionResult> AssignRole(string email,string role)
         {
-            var result = await _serviceManager.AdminService.AssignRoleAsync(email,role);
+            var result = await _servieManager.AdminService.AssignRoleAsync(email,role);
             if ( result is null )
                 return NotFound(new ApiResponse(404));
             return Ok(result);
@@ -23,7 +23,7 @@ namespace Presentation.Controllers
         [HttpPost("ChangeRole")]
         public async Task<IActionResult> ChangeRole(string email,string role)
         {
-            var result = await _serviceManager.AdminService.ChangeRoleAsync(email,role);
+            var result = await _servieManager.AdminService.ChangeRoleAsync(email,role);
             if ( result is null )
                 return BadRequest(new ApiResponse(400));
             return Ok(result);
@@ -33,7 +33,7 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<List<UserWithRoleDto>>> GetUsersWithRoles()
         {
-            var usersWithRoles = await _serviceManager.AdminService.GetUsersWithRolesAsync();
+            var usersWithRoles = await _servieManager.AdminService.GetUsersWithRolesAsync();
             return Ok(usersWithRoles);
         }
 
@@ -41,7 +41,7 @@ namespace Presentation.Controllers
         [HttpDelete("DeleteRole")]
         public async Task<IActionResult> RemoveRoleFromUser(string email,string role)
         {
-            var result = await _serviceManager.AdminService.RemoveRoleAsync(email,role);
+            var result = await _servieManager.AdminService.RemoveRoleAsync(email,role);
             if ( result is null )
                 return BadRequest(new ApiResponse(400));
             return Ok(result);

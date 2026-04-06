@@ -10,11 +10,5 @@ namespace Service.Specifications
             AddIncludes(t => t.Product);
             AddIncludes(t => t.Payment);
         }
-        public TransactionSpecification(int productId) : base(t => t.ProductId == productId && t.Type == TransactionType.Sale)
-        {
-
-        }
-
-        
     }
 }

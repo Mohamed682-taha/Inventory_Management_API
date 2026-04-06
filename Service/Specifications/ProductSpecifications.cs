@@ -41,5 +41,10 @@ namespace Service.Specifications
         {
             AddIncludes(p => p.Category);
         }
+
+        public ProductSpecifications()
+        {
+            AddIncludes(p => p.Category);
+        }
     }
 }

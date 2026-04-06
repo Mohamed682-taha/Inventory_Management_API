@@ -10,79 +10,55 @@ namespace Service
     {
         public async Task<ReportDto> GenerateReportAsync()
         {
-            // Calculate total stock value 
-            var products = await _unitOfWork.GetRepository<Product,int>().GetAllAsync();
+            var productSpecs = new ProductSpecifications();
+            var products = await _unitOfWork.GetRepository<Product,int>().GetAllAsync(productSpecs);
+
+            var transactionRepo = _unitOfWork.GetRepository<Transaction,int>();
+
+            var saleSpecs = new TransactionSaleSpecification();
+            var saleTransactions = await transactionRepo.GetAllAsync(saleSpecs);
+
+            var purchaseSpecs = new TransactionPurchaseSpecification();
+            var purchaseTransactions = await transactionRepo.GetAllAsync(purchaseSpecs);
+
+            var salesByProduct = saleTransactions
+                                .GroupBy(t => t.ProductId).ToDictionary(g => g.Key,g => g.ToList());
+
             var totalStockValue = products.Sum(p => p.Price * p.QuantityInStock);
 
-            // Calculate ProductPerformance per product
-            List<ProductPerformanceDto> productPerformanceDto = [];
-
-            foreach ( var product in products )
+            var productPerformance = products.Select(p =>
             {
-                // need to find transaction of type "sale" with "product Id"
-                var performanceSpec = new TransactionSpecification(product.Id);
-                // all transaction of productId=17 && type = sale
-                var performanceTransaction = await _unitOfWork.GetRepository<Transaction,int>().GetAllAsync(performanceSpec);
-                var performanceTotalRevenue = performanceTransaction.Sum(t => t.TotalAmount);
-                var performanceTotalUnitsSold = performanceTransaction.Sum(t => t.Quantity);
-
-                var productPerformance = new ProductPerformanceDto
+                var sales = salesByProduct.ContainsKey(p.Id) ? salesByProduct[p.Id] : new List<Transaction>();
+                return new ProductPerformanceDto
                 {
-                    Id = product.Id,
-                    ProductName = product.Name,
-                    CategoryName = product.Category.Name,
-                    Price = product.Price,
-                    TotalRevenue = performanceTotalRevenue,
-                    TotalUnitsSold = performanceTotalUnitsSold
+                    Id = p.Id,
+                    CategoryName = p.Category.Name,
+                    Price = p.Price,
+                    ProductName = p.Name,
+                    TotalRevenue = sales.Sum(t => t.TotalAmount),
+                    TotalUnitsSold = sales.Sum(t => t.Quantity)
                 };
+            }).ToList();
 
-                productPerformanceDto.Add(productPerformance);
-            }
-
-            // Calculate TopSellingProducts
-            List<TopSellingProductDto> topSellingProductDto = [];
-            foreach ( var product in products )
-            {
-                var topSellingSpecs = new TransactionSpecification(product.Id);
-                var topSellingTransaction = await _unitOfWork.GetRepository<Transaction,int>().GetAllAsync(topSellingSpecs);
-                var topSellingTotalRevenue = topSellingTransaction.Sum(t => t.TotalAmount);
-                var topSellingTotalUnitsSold = topSellingTransaction.Sum(t => t.Quantity);
-
-                var topSellingProduct = new TopSellingProductDto
+            var topProducts = productPerformance
+                .OrderByDescending(t => t.TotalUnitsSold)
+                .Take(5)
+                .Select(p => new TopSellingProductDto
                 {
-                    ProductId = product.Id,
-                    CategoryName = product.Category.Name,
-                    ProductName = product.Name,
-                    TotalRevenue = topSellingTotalRevenue,
-                    TotalUnitsSold = topSellingTotalUnitsSold
-                };
-                topSellingProductDto.Add(topSellingProduct);
-            }
-            var topProducts = topSellingProductDto.OrderByDescending(p => p.TotalUnitsSold).Take(5).ToList();
-
-            // Calculate total revenue
-            // all transactions with type sale
-            var saleSpecs = new TransactionSaleSpecification();
-            var SaleTransaction = await _unitOfWork.GetRepository<Transaction,int>().GetAllAsync(saleSpecs);
-            var totalRevenue = SaleTransaction.Sum(t => t.TotalAmount);
-
-            // Calculate total purcahse count
-            // all transaction with type purchase
-            var purchaseSpecs = new TransactionPurchaseSpecification();
-            var purchaseTransaction = await _unitOfWork.GetRepository<Transaction,int>().GetAllAsync(purchaseSpecs);
-            var totalPurchaseCount = purchaseTransaction.Count;
-
-            //Calculate total sales count
-            //all transaction with type sale
-            var totalSaleCount = SaleTransaction.Count;
+                    ProductId = p.Id,
+                    CategoryName = p.CategoryName,
+                    ProductName = p.ProductName,
+                    TotalUnitsSold = p.TotalUnitsSold,
+                    TotalRevenue = p.TotalRevenue,
+                }).ToList();
 
             var reportDto = new ReportDto
             {
-                ProductPerformance = productPerformanceDto,
+                ProductPerformance = productPerformance,
                 TopSellingProducts = topProducts,
-                TotalPurchasesCount = totalPurchaseCount,
-                TotalRevenue = totalRevenue,
-                TotalSalesCount = totalSaleCount,
+                TotalPurchasesCount = purchaseTransactions.Count,
+                TotalRevenue = saleTransactions.Sum(t => t.TotalAmount),
+                TotalSalesCount = saleTransactions.Count,
                 TotalStockValue = totalStockValue
 
             };
