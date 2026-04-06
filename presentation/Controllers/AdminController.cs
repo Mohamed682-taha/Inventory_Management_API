@@ -7,7 +7,7 @@ using Shared;
 namespace Presentation.Controllers
 {
     [Authorize(Roles ="Admin")]
-    public class AdminController(IServiceManager _serviceManager) : ApiBaseController
+    public class AdminController(IServiceManager _servieManager) : ApiBaseController
     {
         // POST : BaseUrl/api/Admin/AssignRole?email=...&role=....
         [HttpPost("AssignRole")]

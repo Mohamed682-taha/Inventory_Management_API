@@ -7,5 +7,6 @@
         public IAdminService AdminService { get; }
         public ICategoryService CategoryService { get; }
         public ITransactionService TransactionService { get; }
+        public IReportService ReportService { get; }
     }
 }
