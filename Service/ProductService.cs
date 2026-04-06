@@ -8,7 +8,7 @@ using Shared.ProductsDto;
 
 namespace Service
 {
-    public class ProductService(IUnitOfWork _unitOfWork,IMapper _mapper) : IProductService
+    class ProductService(IUnitOfWork _unitOfWork,IMapper _mapper) : IProductService
     {
         public async Task<int> AddProductAsync(CreateProductDto dto)
         {
@@ -20,7 +20,7 @@ namespace Service
             return 0;
         }
 
-        public async Task<bool> DeleteProduct(int Id)
+        public async Task<bool> DeleteProductAsync(int Id)
         {
             var product = await _unitOfWork.GetRepository<Product,int>().GetByIdAsync(Id);
             if ( product is null )
@@ -50,7 +50,7 @@ namespace Service
             return mappedProduct;
         }
 
-        public async Task<int> UpdateProduct(int Id,UpdateProductDto dto)
+        public async Task<int> UpdateProductAsync(int Id,UpdateProductDto dto)
         {
             var mappedProduct = _mapper.Map<UpdateProductDto,Product>(dto);
             mappedProduct.Id = Id;

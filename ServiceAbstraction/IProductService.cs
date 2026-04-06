@@ -7,8 +7,8 @@ namespace ServiceAbstraction
     {
         Task<PaginatedResult<ProductDto>> GetAllProductsAsync(ProductQueryParams queryParams);
         Task<ProductDto?> GetProductByIdAsync(int Id);
-        Task<int> UpdateProduct(int Id,UpdateProductDto dto);
-        Task<bool> DeleteProduct(int Id);
+        Task<int> UpdateProductAsync(int Id,UpdateProductDto dto);
+        Task<bool> DeleteProductAsync(int Id);
         Task<int> AddProductAsync(CreateProductDto dto);
     }
 }

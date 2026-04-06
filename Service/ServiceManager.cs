@@ -11,7 +11,8 @@ namespace Service
         IMapper _mapper,
         UserManager<AppUser> _userManager,
         RoleManager<IdentityRole> _roleManager,
-        ITokenService _tokenService
+        ITokenService _tokenService,
+        ILowStockService _lowStockService
         )
         : IServiceManager
     {
@@ -24,5 +25,12 @@ namespace Service
 
         private readonly Lazy<IAdminService> _adminService = new Lazy<IAdminService>(() => new AdminService(_userManager,_roleManager));
         public IAdminService AdminService => _adminService.Value;
+
+        private readonly Lazy<ICategoryService> _categoryService = new Lazy<ICategoryService>(() => new CategoryService(_unitOfWork,_mapper));
+        public ICategoryService CategoryService => _categoryService.Value;
+
+        private readonly Lazy<ITransactionService> _transactionService = new Lazy<ITransactionService>(() => new TransactionsService(_unitOfWork,_mapper,_userManager,_lowStockService));
+        public ITransactionService TransactionService => _transactionService.Value;
+
     }
 }

@@ -1,0 +1,25 @@
+[
+	{
+		"Quantity": 10,
+		"Type": "Purchase",
+		"TotalAmount": 500.0,
+		"ProductId": 1,
+		"AppUserId": "467135da-d1a8-41a1-990f-9fee23ccf99f"
+	},
+	{
+		"Quantity": 5,
+		"Type": "Sale",
+		"Date": "2026-04-02T14:30:00",
+		"TotalAmount": 250.0,
+		"ProductId": 2,
+		"AppUserId": "636699ab-c2ec-4921-aa09-8641c18d64ec"
+	},
+	{
+		"Quantity": 20,
+		"Type": "Purchase",
+		"Date": "2026-04-03T09:15:00",
+		"TotalAmount": 1200.0,
+		"ProductId": 3,
+		"AppUserId": "f90e3394-cbdf-4662-9627-9c5783ec70b6"
+	}
+]

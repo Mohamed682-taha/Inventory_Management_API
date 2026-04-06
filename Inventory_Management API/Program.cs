@@ -31,9 +31,9 @@ namespace Inventory_Management_API
             });
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddScoped<IServiceManager,ServiceManager>();
-            builder.Services.AddAutoMapper(p => p.AddProfile(new ProductProfile()));
+            builder.Services.AddAutoMapper(p => p.AddProfiles([new ProductProfile(),new CategoriesProfile(),new TransactionProfile()]));
             builder.Services.AddOpenApi();
-
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
             builder.Services.Configure<ApiBehaviorOptions>((options) =>
             {
                 options.InvalidModelStateResponseFactory = (actionContext) =>
@@ -70,6 +70,8 @@ namespace Inventory_Management_API
                 };
             });
             builder.Services.AddScoped<ITokenService,TokenService>();
+            builder.Services.AddScoped<ILowStockService,LowStockService>();
+            builder.Services.AddTransient<IMailService,MailService>();
             var app = builder.Build();
 
             using var scope = app.Services.CreateScope();
