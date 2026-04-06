@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Specifications;
 using ServiceAbstraction;
+using Shared.ProductsDto;
 using Shared.TransactionDto;
 
 namespace Service
 {
-    class TransactionsService(IUnitOfWork _unitOfWork,IMapper _mapper,UserManager<AppUser> _userManager) : ITransactionService
+    class TransactionsService(
+        IUnitOfWork _unitOfWork,
+        IMapper _mapper,
+        UserManager<AppUser> _userManager,
+        ILowStockService _lowStockService) : ITransactionService
     {
         public async Task<IReadOnlyList<TransactionDto>> GetAllTransaction()
         {
@@ -19,7 +24,7 @@ namespace Service
             var mappedTransactions = _mapper.Map<IReadOnlyList<Transaction>,IReadOnlyList<TransactionDto>>(transactions);
             return mappedTransactions;
         }
-       
+
         public async Task<TransactionDto?> CreateTransaction(CreateTransactionDto dto)
         {
             var product = await _unitOfWork.GetRepository<Product,int>().GetByIdAsync(dto.ProductId);
@@ -50,7 +55,16 @@ namespace Service
                 throw new BadRequestException(["Failed to add transaction"]);
 
             var transactionToReturn = _mapper.Map<Transaction,TransactionDto>(mappedTransaction);
+
+            if ( dto.Type == "Sale" )
+            {
+                var mappedProduct = _mapper.Map<Product,ProductDto>(product);
+                await _lowStockService.CheckAndCreateAlertAsync(mappedProduct);
+            }
+
             return transactionToReturn;
         }
+
+
     }
 }
