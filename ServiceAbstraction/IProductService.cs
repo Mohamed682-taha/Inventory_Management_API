@@ -1,4 +1,5 @@
-﻿using Shared;
+﻿using Microsoft.AspNetCore.Http;
+using Shared;
 using Shared.ProductsDto;
 
 namespace ServiceAbstraction
@@ -10,5 +11,7 @@ namespace ServiceAbstraction
         Task<int> UpdateProductAsync(int Id,UpdateProductDto dto);
         Task<bool> DeleteProductAsync(int Id);
         Task<int> AddProductAsync(CreateProductDto dto);
+        Task<int> ImportCsv(IFormFile file);
+        Task<byte[]> ExportToCsv();
     }
 }

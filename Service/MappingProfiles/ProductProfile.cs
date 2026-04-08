@@ -12,6 +12,8 @@ namespace Service.MappingProfiles
                 .ForMember(dest => dest.CategoryName,opt => opt.MapFrom(src => src.Category.Name));
             CreateMap<CreateProductDto,Product>();
             CreateMap<UpdateProductDto,Product>();
+            CreateMap<Product,ProductsExportDto>()
+                .ForMember(dest => dest.CategoryName,opt => opt.MapFrom(src => src.Category.Name));
         }
     }
 }

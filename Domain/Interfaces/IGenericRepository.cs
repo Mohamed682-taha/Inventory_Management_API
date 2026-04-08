@@ -10,6 +10,7 @@ namespace Domain.Interfaces
         Task<TEntity?> GetByIdAsync(int Id);
         Task<TEntity?> GetByIdAsync(ISpecification<TEntity,TKey> specs);
         Task AddAsync(TEntity entity);
+        Task AddRangeAsync(List<TEntity> entities);
         void Update(TEntity entity);
         void Remove(TEntity entity);
     }

@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using CsvHelper;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Service.Specifications;
 using ServiceAbstraction;
 using Shared;
 using Shared.ProductsDto;
+using System.Globalization;
 
 namespace Service
 {
@@ -18,6 +22,39 @@ namespace Service
             if ( result > 0 )
                 return 1;
             return 0;
+        }
+
+        public async Task<int> ImportCsv(IFormFile file)
+        {
+            using var stream = new StreamReader(file.OpenReadStream());
+            using var csv = new CsvReader(stream,CultureInfo.InvariantCulture);
+
+            var mappedProducts = csv.GetRecords<CreateProductDto>().ToList();
+            var products = _mapper.Map<List<CreateProductDto>,List<Product>>(mappedProducts);
+            await _unitOfWork.GetRepository<Product,int>().AddRangeAsync(products);
+            var result = await _unitOfWork.SaveChangesAsync();
+            if ( result == 0 )
+                throw new BadRequestException(["Failed to add products"]);
+            return result;
+        }
+
+        public async Task<byte[]> ExportToCsv()
+        {
+            var specs = new ProductSpecifications();
+            var products = await _unitOfWork.GetRepository<Product,int>().GetAllAsync(specs);
+            var mappedProducts = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductsExportDto>>(products);
+            using var memoryStream = new MemoryStream();
+            using var writer = new StreamWriter(memoryStream);
+            using var csv = new CsvWriter(writer,CultureInfo.InvariantCulture);
+            csv.WriteHeader<ProductsExportDto>();
+            csv.NextRecord();
+            foreach ( var product in mappedProducts )
+            {
+                csv.WriteRecord(product);
+                csv.NextRecord();
+            }
+            writer.Flush();
+            return memoryStream.ToArray();
         }
 
         public async Task<bool> DeleteProductAsync(int Id)

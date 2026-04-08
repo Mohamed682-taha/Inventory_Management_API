@@ -33,6 +33,6 @@ namespace Service
         public ITransactionService TransactionService => _transactionService.Value;
 
         private readonly Lazy<IReportService> _reportService = new Lazy<IReportService>(() => new ReportService(_unitOfWork));
-        public IReportService ReportService => _reportService.Value;;
+        public IReportService ReportService => _reportService.Value;
     }
 }
