@@ -32,5 +32,7 @@ namespace Service
         private readonly Lazy<ITransactionService> _transactionService = new Lazy<ITransactionService>(() => new TransactionsService(_unitOfWork,_mapper,_userManager,_lowStockService));
         public ITransactionService TransactionService => _transactionService.Value;
 
+        private readonly Lazy<IReportService> _reportService = new Lazy<IReportService>(() => new ReportService(_unitOfWork));
+        public IReportService ReportService => _reportService.Value;
     }
 }
