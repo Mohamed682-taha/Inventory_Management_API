@@ -7,11 +7,13 @@ namespace Inventory_Management_API.MiddleWares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<CustomExceptionMiddleware> _logger;
+        private readonly IHostEnvironment _env;
 
-        public CustomExceptionMiddleware(RequestDelegate next,ILogger<CustomExceptionMiddleware> logger)
+        public CustomExceptionMiddleware(RequestDelegate next,ILogger<CustomExceptionMiddleware> logger,IHostEnvironment env)
         {
             _next = next;
             _logger = logger;
+            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -29,7 +31,10 @@ namespace Inventory_Management_API.MiddleWares
                     BadRequestException => StatusCodes.Status400BadRequest,
                     _ => 500
                 };
-                var response = new ApiServerErrorResponse(context.Response.StatusCode,ex.Message,ex.StackTrace);
+
+                var response = _env.IsDevelopment() ?
+                    new ApiServerErrorResponse(context.Response.StatusCode,ex.Message,ex.StackTrace) :
+                    new ApiResponse(context.Response.StatusCode,ex.Message);
                 await context.Response.WriteAsJsonAsync(response);
             }
         }

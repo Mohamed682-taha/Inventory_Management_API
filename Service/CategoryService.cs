@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
 using Domain.Models;
-using Microsoft.AspNetCore.Authorization;
 using ServiceAbstraction;
 using Shared.CategoryDto;
 

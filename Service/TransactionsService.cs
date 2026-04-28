@@ -3,7 +3,6 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Service.Specifications;
 using ServiceAbstraction;
 using Shared.ProductsDto;
@@ -34,16 +33,18 @@ namespace Service
             if ( user is null )
                 return null;
 
-            switch ( dto.Type )
+            switch ( dto.Type.ToLower() )
             {
-                case "Sale":
+                case "sale":
+                    if ( product.QuantityInStock == 0 )
+                        throw new Exception("Quantity in stock is zero");
                     product.QuantityInStock -= dto.Quantity;
                     break;
-                case "Purchase":
+                case "purchase":
                     product.QuantityInStock += dto.Quantity;
                     break;
                 default:
-                    throw new BadRequestException([$"Invalid transaction type: {dto.Type}"]);
+                    throw new Exception("Invalid transaction type: {dto.Type}");
             }
             dto.TotalAmount = product.Price * dto.Quantity;
 

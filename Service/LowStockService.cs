@@ -28,11 +28,13 @@ namespace Service
                     await _unitOfWork.GetRepository<LowStockAlert,int>().AddAsync(newAlert);
                     await _unitOfWork.SaveChangesAsync();
 
-                    var admins = await _userManager.GetUsersInRoleAsync("Admin");
-                    var managers = await _userManager.GetUsersInRoleAsync("Manager");
-                    var staff = await _userManager.GetUsersInRoleAsync("Staff");
-                    var adminMangers = admins.Union(managers);
-                    var to = adminMangers.Union(staff).ToList();
+                    var admins = _userManager.GetUsersInRoleAsync("Admin");
+                    var managers = _userManager.GetUsersInRoleAsync("Manager");
+                    var staff = _userManager.GetUsersInRoleAsync("Staff");
+                    await Task.WhenAll(admins,managers,staff);
+
+                    var adminMangers = admins.Result.Union(managers.Result);
+                    var to = adminMangers.Union(staff.Result).ToList();
 
                     foreach ( var recipient in to )
                     {
