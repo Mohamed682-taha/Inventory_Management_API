@@ -1,6 +1,7 @@
 
 using Domain.Interfaces;
 using Domain.Models;
+using Inventory_Management_API.Extensions;
 using Inventory_Management_API.MiddleWares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -25,53 +26,12 @@ namespace Inventory_Management_API
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
-            builder.Services.AddDbContext<InventoryDbContext>(opt =>
-            {
-                opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-            builder.Services.AddScoped<IServiceManager,ServiceManager>();
-            builder.Services.AddAutoMapper(p => p.AddProfiles([new ProductProfile(),new CategoriesProfile(),new TransactionProfile()]));
-            builder.Services.AddOpenApi();
-            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-            builder.Services.Configure<ApiBehaviorOptions>((options) =>
-            {
-                options.InvalidModelStateResponseFactory = (actionContext) =>
-                {
-                    var errors = actionContext.ModelState.Where(m => m.Value!.Errors.Count() > 0)
-                                            .SelectMany(m => m.Value!.Errors)
-                                            .Select(e => e.ErrorMessage);
-                    var response = new ApiValidationErrorResponse()
-                    {
-                        Errors = errors
-                    };
-                    return new BadRequestObjectResult(response);
-                };
-            });
+            builder.Services.AddingSwaggerServices();
+            builder.Services.AddingInfraStructureServices(builder.Configuration);
+            builder.Services.AddingApplicationServices();
+            builder.Services.AddingConfigureServices();
+            builder.Services.AddingIdentityServices(builder.Configuration);
 
-            builder.Services.AddIdentity<AppUser,IdentityRole>().AddEntityFrameworkStores<InventoryDbContext>();
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["JWT:Issuer"],
-                    ValidateAudience = true,
-                    ValidAudience = builder.Configuration["JWT:Audience"],
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                         Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!))
-                };
-            });
-            builder.Services.AddScoped<ITokenService,TokenService>();
-            builder.Services.AddScoped<ILowStockService,LowStockService>();
-            builder.Services.AddTransient<IMailService,MailService>();
             var app = builder.Build();
 
             using var scope = app.Services.CreateScope();
